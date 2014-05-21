@@ -73,8 +73,8 @@ def get_password_from_md5_digest(md5_digest):
     ((26**4 + 95**4)/float(26**4)) times worse than the worst case guess
     of a lowercase-only password.
 
-    That means that the worst case password should not take over
-    about 87.83 seconds on my laptop.
+    That means that the worst case 4 character password should not take over
+    about 87.83 (179.24*0.49) seconds to crack on my laptop.
 
 
     Idea for improvement:
