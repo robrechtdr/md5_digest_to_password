@@ -105,7 +105,8 @@ def get_password_from_md5_digest(md5_digest):
         if digest_guess == md5_digest:
             return guess
 
-    # This algorithm runs when at least 1 non-lowercase number is used.
+    # This algorithm runs when at least 1 non-lowercase character was used in
+    # in the original password.
     # It does 26**4 useless checks in the worst case scenario.
     # However, this is only about 0.56% (26**4/float(95**4)*100) slower
     # than if it didn't.
