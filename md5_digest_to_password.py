@@ -4,6 +4,7 @@ import csv
 import functools
 import hashlib
 import itertools
+import multiprocessing
 import string
 import sys
 import time
@@ -129,6 +130,32 @@ def get_password_and_time(md5_digest):
     exec_time = end_time - init_time
     return passw, exec_time
 
+def get_optimized_amount_of_processes(iterable):
+    """Get the optimized amount of processes to process the items in
+    the iterable via multiprocessing.
+
+    Args:
+        iterable (iterable): The iterable of which the items need to be
+            processed via multiprocessing. Do not use an iterable that
+            doesn't have the __len__ attribute (e.g. a generator).
+
+    Returns:
+        int.
+
+    """
+    virtual_cores = multiprocessing.cpu_count()
+    iterations = len(iterable)
+    # Afaik it would not make sense to spawn more processes than the number
+    # of items to process.
+    if iterations < virtual_cores:
+        return iterations
+    # There seems to be an overhead per process spawned.
+    # Afaiu the following SO thread takes the number of virtual cores as a
+    # sensible limit to the amount of processes to spawn:
+    # http://stackoverflow.com/questions/9355472/are-there-any-guidelines-
+    # to-follow-when-choosing-number-of-processes-with-multip
+    else:
+        return virtual_cores
 
 def main(table):
     # Step 1. in the problem description.
@@ -140,10 +167,13 @@ def main(table):
     # Step 3. and 4. in the problem description.
     table.create_column("pass", "")
     table.create_column("time", "")
-    for row in table:
-        passw, time = get_password_and_time(row["md5"])
-        row["pass"] = passw
-        row["time"] = time
+
+    md5s = (row["md5"] for row in table)
+    processes = get_optimized_amount_of_processes(table)
+    pool = multiprocessing.Pool(processes=processes)
+    result = pool.map(get_password_and_time, md5s)
+    for row, row_result in zip(table, result):
+        row["pass"], row["time"] = row_result
 
     # First part of step 5. in the problem description.
     for row in table:
