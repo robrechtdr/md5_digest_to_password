@@ -10,14 +10,18 @@ import time
 import types
 
 
-class Table(list):
-    def load_table_from_csv(self, path):
-        with open(path) as f:
+class CSVTable(list):
+    def __init__(self, csv_file_path):
+        super(CSVTable, self).__init__()
+        with open(csv_file_path) as f:
             f_csv = csv.DictReader(f)
+            # So we can still get the original column order if we need to.
+            self.columns = f_csv.fieldnames
             for row in f_csv:
                 self.append(row)
 
     def create_column(self, name, value):
+        self.columns.append(name)
         # See: http://stackoverflow.com/questions/624926/how-to-detect-whether-
         # a-python-variable-is-a-function/624948#624948
         if isinstance(value, (types.FunctionType,
@@ -35,11 +39,12 @@ class Table(list):
                     row[name] = value
 
     def delete_column(self, name):
+        self.columns.remove(name)
         for row in self:
             del row[name]
 
     def __repr__(self):
-        return "Table({0})".format(super(Table, self).__repr__())
+        return "CSVTable({0})".format(super(CSVTable, self).__repr__())
 
 
 # Assumes that passw exists out of 4 printable ASCII characters.
@@ -147,7 +152,6 @@ def main(table):
 
 if __name__ == "__main__":
     init_time = time.time()
-    table = Table([])
     try:
         script, csv_file = sys.argv
     except ValueError:
@@ -156,7 +160,7 @@ if __name__ == "__main__":
                "python {0} data.csv\n".format(script))
         sys.exit()
 
-    table.load_table_from_csv(csv_file)
+    table = CSVTable(csv_file)
     main(table)
     end_time = time.time()
     total_time = end_time - init_time
