@@ -33,7 +33,7 @@ class CSVTable(list):
             row_manipulator = None
 
         for n, row in enumerate(self):
-            if name not in row:  # row.has_key(name):
+            if name not in row:
                 if row_manipulator:
                     row[name] = row_manipulator(row)
                 else:
