@@ -165,8 +165,8 @@ def main(table):
     table.delete_column("pass")
 
     # Step 3. and 4. in the problem description.
-    table.create_column("pass", "")
-    table.create_column("time", "")
+    table.create_column("pass", None)
+    table.create_column("time", None)
 
     md5s = (row["md5"] for row in table)
     processes = get_optimized_amount_of_processes(table)
