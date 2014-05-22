@@ -136,15 +136,15 @@ def get_optimized_amount_of_processes(iterable):
 
     Args:
         iterable (iterable): The iterable of which the items need to be
-            processed via multiprocessing. Do not use an iterable that
-            doesn't have the __len__ attribute (e.g. a generator).
+            processed via multiprocessing.
 
     Returns:
         int.
 
     """
-    virtual_cores = multiprocessing.cpu_count()
+    assert hasattr(iterable, "__len__")
     iterations = len(iterable)
+    virtual_cores = multiprocessing.cpu_count()
     # Afaik it would not make sense to spawn more processes than the number
     # of items to process.
     if iterations < virtual_cores:
