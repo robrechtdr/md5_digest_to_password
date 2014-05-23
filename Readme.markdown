@@ -47,9 +47,20 @@ From that input you should:
 
 ## Solution
 
-* To see the execution times, run the following:
+* To run the program, execute the following:
 
     `python md5_to_password.py data.csv`
+
+  The output of a typical run: 
+
+      user    md5                                pass    time             
+
+      john    962012d09b8170d912f0669f6d7d9d07   qwer    0.309146165848   
+      eva     912ec803b2ce49e4a541068d495ab570   asdf    0.0172109603882   
+      allan   fd2cc6c54239c40495a0d3a93b6380eb   zxcv    0.460544109344   
+
+      Total execution time is 0.472128152847 seconds.
+
 
 * Cracking the digests with `John` took a little *over 25 seconds*:
 
