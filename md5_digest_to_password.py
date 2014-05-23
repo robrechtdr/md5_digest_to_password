@@ -44,10 +44,23 @@ class CSVTable(list):
         for row in self:
             del row[name]
 
-    def show(self):
-        for row in self:
+    def show(self, min_column_len=9):
+        trailing_space = "  "
+        trailing_space_len = len(trailing_space)
+        assert min_column_len >= trailing_space_len
+
+        just_len = min_column_len - trailing_space_len
+        for n, row in enumerate(self):
+            if n == 0:
+                for column_name in self.columns:
+                    diff = len(str(row[column_name])) - len(column_name)
+                    if diff >= 0:
+                        column_name = column_name + diff * " "
+                    print "{0}{1}".format(column_name, trailing_space).ljust(just_len),
+                print "\n"
+
             for column in self.columns:
-                print "{0}:{1}\t".format(column, row[column]),
+                print "{0}{1}".format(row[column], trailing_space).ljust(just_len),
             print ""
 
     def __repr__(self):
@@ -136,6 +149,7 @@ def get_password_and_time(md5_digest):
     exec_time = end_time - init_time
     return passw, exec_time
 
+
 def get_optimized_amount_of_processes(iterable):
     """Get the optimized amount of processes to process the items in
     the iterable via multiprocessing.
@@ -162,6 +176,7 @@ def get_optimized_amount_of_processes(iterable):
     # to-follow-when-choosing-number-of-processes-with-multip
     else:
         return virtual_cores
+
 
 def main(table):
     # Step 1. in the problem description.
