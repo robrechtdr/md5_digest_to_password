@@ -44,6 +44,19 @@ class CSVTable(list):
         for row in self:
             del row[name]
 
+    def _print_header(self, header, row, trailing_space, just_len):
+        for column_name in self.columns:
+            diff = len(str(row[column_name])) - len(column_name)
+            if diff >= 0:
+                column_name = column_name + diff * " "
+            print "{0}{1}".format(column_name, trailing_space).ljust(just_len),
+        print "\n"
+
+    def _print_row(self, header, row, trailing_space, just_len):
+        for column in self.columns:
+            print "{0}{1}".format(row[column], trailing_space).ljust(just_len),
+        print ""
+
     def show(self, min_column_len=9):
         trailing_space = "  "
         trailing_space_len = len(trailing_space)
@@ -52,16 +65,8 @@ class CSVTable(list):
         just_len = min_column_len - trailing_space_len
         for n, row in enumerate(self):
             if n == 0:
-                for column_name in self.columns:
-                    diff = len(str(row[column_name])) - len(column_name)
-                    if diff >= 0:
-                        column_name = column_name + diff * " "
-                    print "{0}{1}".format(column_name, trailing_space).ljust(just_len),
-                print "\n"
-
-            for column in self.columns:
-                print "{0}{1}".format(row[column], trailing_space).ljust(just_len),
-            print ""
+                self._print_header(self.columns, row, trailing_space, just_len)
+            self._print_row(self.columns, row, trailing_space, just_len)
 
     def __repr__(self):
         return "CSVTable({0})".format(super(CSVTable, self).__repr__())
