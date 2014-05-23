@@ -44,6 +44,12 @@ class CSVTable(list):
         for row in self:
             del row[name]
 
+    def show(self):
+        for row in self:
+            for column in self.columns:
+                print "{0}:{1}\t".format(column, row[column]),
+            print ""
+
     def __repr__(self):
         return "CSVTable({0})".format(super(CSVTable, self).__repr__())
 
@@ -176,8 +182,7 @@ def main(table):
         row["pass"], row["time"] = row_result
 
     # First part of step 5. in the problem description.
-    for row in table:
-        print row
+    table.show()
 
 
 if __name__ == "__main__":
@@ -195,4 +200,4 @@ if __name__ == "__main__":
     end_time = time.time()
     total_time = end_time - init_time
     # Second part of step 5. in the problem description.
-    print "Total execution time is {0} seconds.".format(total_time)
+    print "\nTotal execution time is {0} seconds.".format(total_time)
