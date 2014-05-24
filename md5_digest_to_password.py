@@ -165,6 +165,16 @@ def get_password_from_md5_digest(md5_digest):
 
 
 def get_password_and_time(md5_digest):
+    """Get back the password from an md5 digest and the time it took to get it.
+
+    Args:
+        md5_digest (str): The digest to get the password off and
+            time it took to get it.
+
+    Returns:
+        (str, float).
+
+    """
     init_time = time.time()
     passw = get_password_from_md5_digest(md5_digest)
     end_time = time.time()
