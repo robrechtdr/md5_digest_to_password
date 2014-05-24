@@ -86,38 +86,55 @@ def get_password_from_md5_digest(md5_digest):
 
     Performance:
 
-    The worst case performance is for a guess of a password containing one
-    or more non-lowercase characters. This is the case of 26**4 + 95**4
-    guesses.
+    The worst performance is experienced when cracking a digest derived
+    from a password containing one or more non-lowercase characters.
+    This is the case of 26**4 + 95**4 guesses.
 
-    The worst case performance of a guess of a password containing only
-    lowercase characters is for the password "zzzz" with 26**4 guesses
-    because this is the last guessed password according to the
-    itertools.product algorithm.
+    The worst performance when cracking a digest derived from a password
+    containing only lowercase characters is for the password "zzzz". This
+    would take 26**4 guesses because this is the last guessed password
+    according to the itertools.product algorithm.
 
-    On my laptop (Lenovo E531), this guess executes consistently
+    On my laptop (Lenovo E531), this case executes consistently
     under 0.49 seconds.
 
-    Worst case performance of a guess of a password containing one or more
-    non-lowercase characters should thus be about 179.24
-    ((26**4 + 95**4)/float(26**4)) times worse than the worst case guess
-    of a lowercase-only password.
+    The worst performance when cracking a digest derived from a password
+    containing one or more non-lowercase characters should thus be about 179.24
+    ((26**4 + 95**4)/float(26**4)) times worse than the worst digest of a
+    lowercase-only password.
 
-    That means that the worst case 4 character password should not take over
-    about 87.83 (179.24*0.49) seconds to crack on my laptop.
+    That means that the worst case digest from a 4 character password should
+    not take over about 87.83 (179.24*0.49) seconds to crack on my laptop.
 
 
     Idea for improvement:
 
-    A more efficient algorithm would ...
+    1. Check each md5_digest against a digest_guess generated from a list of
+    the most frequently occurring 4 character permutations as passwords ordered
+    from most frequently occurring to least frequently occurring.
 
-    1. ... check each md5_digest against a digest_guess generated from a list of
-    the most frequently occuring 4 character permutations as passwords.
     Even better would be if the check would occur against precomputed
     digest_guesses and then grab the password that is paired with it from a
     table.
-    2. ... if still not found, then check only against permutations not
-    guessed before.
+
+    2. Ideally if no matching digest is found in this table, then it should
+    guess only for permutations not guessed before.
+
+    However, I don't see how I could implement this redundancy check
+    efficiently in practice. I think performing checks for verifying
+    if a case is already guessed before would on average probably be
+    more costly than performing useless guesses with no checks at all.
+
+    This is under the assumption that the amount of entries in the
+    precomputed table would be trivial versus the amount of possible
+    permutations.
+
+    Or even better might be to just generate and append guesses with a
+    possibly costly check to the table of most frequently occuring
+    passwords so that all permutations are computed upfront. And go
+    over the permutations in the order as they appear in the table.
+
+    The algorithm would likely also be faster if it was written in C.
 
     """
     digits = string.printable[0:10]
