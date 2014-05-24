@@ -62,6 +62,11 @@ From that input you should:
       Total execution time is 0.472128152847 seconds.
 
 
+  To run the tests execute the following:
+
+    `python tests.py`
+
+
 * Cracking the digests with `John` took a little *over 25 seconds*:
 
 
