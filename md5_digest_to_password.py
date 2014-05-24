@@ -12,7 +12,17 @@ import types
 
 
 class CSVTable(list):
+    """A table loaded from a csv file.
+    """
     def __init__(self, csv_file_path):
+        """
+        Args:
+            csv_file_path (str): The path of the csv file to load.
+
+        Returns:
+            None.
+
+        """
         super(CSVTable, self).__init__()
         with open(csv_file_path) as f:
             f_csv = csv.DictReader(f)
@@ -22,6 +32,20 @@ class CSVTable(list):
                 self.append(row)
 
     def create_column(self, name, value):
+        """Create a new column with a specified name and a value per row.
+
+        Args:
+            name (str): The name of the column to be created.
+
+            value (any type): The value for each row of the new column.
+                If you want each value to be dependent of some other value
+                of the column per row then provide a function, e.g.:
+                `lambda row: row["amount"] * 2`.
+
+        Returns:
+            None.
+
+        """
         self.columns.append(name)
         # See: http://stackoverflow.com/questions/624926/how-to-detect-whether-
         # a-python-variable-is-a-function/624948#624948
@@ -40,6 +64,15 @@ class CSVTable(list):
                     row[name] = value
 
     def delete_column(self, name):
+        """Delete a column with a specified name.
+
+        Args:
+            name (str):
+
+        Returns:
+            None.
+
+        """
         self.columns.remove(name)
         for row in self:
             del row[name]
@@ -58,6 +91,15 @@ class CSVTable(list):
         print ""
 
     def show(self, min_column_len=9):
+        """Show a prettified representation of the table with ordered columns.
+
+        Args:
+            min_column_len (int): The minimum amount of space for each column.
+
+        Returns:
+            None.
+
+        """
         trailing_space = "  "
         trailing_space_len = len(trailing_space)
         assert min_column_len >= trailing_space_len
