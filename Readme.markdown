@@ -1,5 +1,7 @@
 ## Problem
 
+> I received this problem during an application for a position as a Python Software Developer. 
+
 ### Introduction
 
 The goal of this exercise is to create a script that bruteforces md5-hashed
